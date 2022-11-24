@@ -51,13 +51,13 @@ class Camera:
             self.position += self.up * velocity
             
         if keys[K_s]:
-            self.position -= self.forward * velocity
+            self.position += -self.forward * velocity
             
         if keys[K_a]:
-            self.position -= self.right * velocity
+            self.position += -self.right * velocity
                      
         if keys[K_e]:
-            self.position -= self.up * velocity
+            self.position += -self.up * velocity
 
     def get_view_matrix(self):
         return lookAt(self.position, self.position + self.forward, self.up)
