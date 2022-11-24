@@ -39,28 +39,36 @@ class Camera:
 
     def move(self):
         velocity = SPEED * self.app.delta_time
-        keys = get_pressed()
+        keys = get_pressed()      
+        teclas = {keys[K_w] : self.forward, keys[K_d] : self.right,\
+                  keys[K_q] : self.up, keys[K_s] : -self.forward,\
+                  keys[K_a] : -self.right, keys[K_e] : -self.up}
 
-        teclas_Poss = {keys[K_w] : self.forward, keys[K_d] : self.right,\
-                       keys[K_q] : self.up, keys[K_s] : -self.forward,\
-                       keys[K_a] : -self.right, keys[K_e] : -self.up}
+        '''teclas = {1 : (keys[K_w], keys[K_d], keys[K_q]),\
+                  -1 : (keys[K_s], keys[K_a], keys[K_e])}'''
 
-        for tecla_Pos in teclas_Poss:
+        '''teclas = {keys[K_w] or keys[K_s] : self.forward,\
+                  keys[K_d] or keys[K_a] : self.right,\
+                  keys[K_q] or keys[K_e] : self.up}'''
+
+        for tecla_Pos in teclas:
             if tecla_Pos:
                 if keys[K_w] and keys[K_d]:
-                    self.position += velocity * (self.forward + self.right)
+                    velocity *= self.forward + self.right
 
                 elif keys[K_w] and keys[K_a]:
-                    self.position += velocity * (self.forward - self.right)
+                    velocity *= self.forward - self.right
 
                 elif keys[K_a] and keys[K_s]:
-                    self.position += velocity * (-self.right - self.forward)
+                    velocity *= -self.forward - self.right
 
                 elif keys[K_s] and keys[K_d]:
-                    self.position += velocity * (-self.forward + self.right)
+                    velocity *= self.right - self.forward
 
                 else:
-                    self.position += teclas_Poss[tecla_Pos] * velocity
+                    velocity *= teclas[tecla_Pos]
+
+                self.position += velocity
 
     def get_view_matrix(self):
         return lookAt(self.position, self.position + self.forward, self.up)
