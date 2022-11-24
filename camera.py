@@ -41,23 +41,26 @@ class Camera:
         velocity = SPEED * self.app.delta_time
         keys = get_pressed()
 
-        if keys[K_w]:
-            self.position += self.forward * velocity
+        teclas_Poss = {keys[K_w] : self.forward, keys[K_d] : self.right,\
+                       keys[K_q] : self.up, keys[K_s] : -self.forward,\
+                       keys[K_a] : -self.right, keys[K_e] : -self.up}
 
-        if keys[K_d]:
-            self.position += self.right * velocity
-            
-        if keys[K_q]:
-            self.position += self.up * velocity
-            
-        if keys[K_s]:
-            self.position -= self.forward * velocity
-            
-        if keys[K_a]:
-            self.position -= self.right * velocity
-                     
-        if keys[K_e]:
-            self.position -= self.up * velocity
+        for tecla_Pos in teclas_Poss:
+            if tecla_Pos:
+                if keys[K_w] and keys[K_d]:
+                    self.position += velocity * (self.forward + self.right)
+
+                elif keys[K_w] and keys[K_a]:
+                    self.position += velocity * (self.forward - self.right)
+
+                elif keys[K_a] and keys[K_s]:
+                    self.position += velocity * (-self.right - self.forward)
+
+                elif keys[K_s] and keys[K_d]:
+                    self.position += velocity * (-self.forward + self.right)
+
+                else:
+                    self.position += teclas_Poss[tecla_Pos] * velocity
 
     def get_view_matrix(self):
         return lookAt(self.position, self.position + self.forward, self.up)
