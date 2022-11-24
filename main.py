@@ -1,6 +1,5 @@
-import moderngl as mgl
+from moderngl import create_context, DEPTH_TEST, CULL_FACE
 import sys
-from model import *
 from camera import Camera
 from light import Light
 from mesh import Mesh
@@ -22,34 +21,23 @@ class GraphicsEngine:
         # window size
         self.WIN_SIZE = win_size
         # set opengl attr
-
         (*(gl_set_attribute(a, b) for a, b in ((GL_CONTEXT_MAJOR_VERSION, 3),\
-                                      (GL_CONTEXT_MINOR_VERSION, 3),\
-                                      (GL_CONTEXT_PROFILE_MASK,\
-                                       GL_CONTEXT_PROFILE_CORE))),)
-        
-        '''gl_set_attribute(GL_CONTEXT_MAJOR_VERSION, 3)
-        gl_set_attribute(GL_CONTEXT_MINOR_VERSION, 3)
-        gl_set_attribute(GL_CONTEXT_PROFILE_MASK, GL_CONTEXT_PROFILE_CORE)'''
+                                               (GL_CONTEXT_MINOR_VERSION, 3),\
+                                               (GL_CONTEXT_PROFILE_MASK,\
+                                                GL_CONTEXT_PROFILE_CORE))),)
         # create opengl context
         set_mode(self.WIN_SIZE, flags = OPENGL | DOUBLEBUF)
         # mouse settings
         set_grab(True)
         set_visible(False)
         # detect and use existing opengl context
-        self.ctx = mgl.create_context()
+        self.ctx = create_context()
         # self.ctx.front_face = 'cw'
-        self.ctx.enable(flags = mgl.DEPTH_TEST | mgl.CULL_FACE)
+        self.ctx.enable(flags = DEPTH_TEST | CULL_FACE)
         # create an object to help track time
         self.clock = Clock()
-        self.time = 0
-        self.delta_time = 0
-        # light
-        self.light = Light()
-        # camera
-        self.camera = Camera(self)
-        # mesh
-        self.mesh = Mesh(self)
+        self.time, self.delta_time, self.light, self.camera, self.mesh = 0, 0,\
+                                                Light(), Camera(self), Mesh(self)        
         # scene
         self.scene = Scene(self)
         # renderer
@@ -83,9 +71,7 @@ class GraphicsEngine:
             self.render()
             self.delta_time = self.clock.tick(60)
 
-if __name__ == '__main__':
-    app = GraphicsEngine()
-    app.run()
+GraphicsEngine().run()
 
 
 
